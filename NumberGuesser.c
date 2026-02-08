@@ -26,10 +26,11 @@ int main(){
             break;
 
         default:
+            printf("invalid input.\n");
             break;
         }
         
-        printf("do you want to play again? 0/1: ");
+        printf("try again? 0/1: ");
         int try = valueinput();
         if (try == 1){
             system("cls");
@@ -47,26 +48,42 @@ void zen(){
     int min = 1, max = 1000;
     int randomNum = rng(min, max);
     system("cls");
-    int guess, tally=0;
+    int guess = -1, tally = 0;
+    int last_guess = -1;
+    int last_relation = 0; /* 0=correct, 1=too high, -1=too low, 2=invalid */
+
     while(randomNum != guess){
-        printf("==== ZEN MODE ====\ni have generated a random number ranging %d - %d, try to guess what it is\nWhat is the number: ", min, max);
+        printf("==== ZEN MODE ====\ni have generated a random number ranging %d - %d, try to guess what it is\n", min, max);
+        if (last_guess != -1) {
+            if (last_relation == 0) printf("Last guess: %d (correct).\n", last_guess);
+            else if (last_relation == 1) printf("Last guess: %d (too high).\n", last_guess);
+            else if (last_relation == -1) printf("Last guess: %d (too low).\n", last_guess);
+            else printf("Last input: %d (invalid/out of range).\n", last_guess);
+        }
+        printf("What is the number: ");
         
         guess = valueinput();
+        last_guess = guess;
 
         if (randomNum == guess){
+            last_relation = 0;
             printf("you guessed correctly! amazing boy you are perhaps\n");
+            tally++;
             break;
         }
 
         else if (guess > randomNum && guess <= max){
+            last_relation = 1;
             printf("oof wrong guess! you shot too high\n");
         }
 
         else if (guess < randomNum && guess >= min){
+            last_relation = -1;
             printf("oof wrong guess! you shot too low\n");
         }
 
         else{
+            last_relation = 2;
             printf("you didnt even try! disappointing boy you are truly\n");
         }
         tally++;
@@ -110,25 +127,40 @@ void trial(){
     
     int randomNum = rng(min, max);
     system("cls");
+    int last_guess = -1;
+    int last_relation = 0; /* 0=correct, 1=too high, -1=too low, 2=invalid */
+
     for (size_t i = 0; i < count; i++){
-        printf("==== TRIAL MODE ====\ni have generated a random number ranging %d - %d, try to guess what it is in %d tries\nWhat is the number: ", min, max, count-i);
+        printf("==== TRIAL MODE ====\ni have generated a random number ranging %d - %d, try to guess what it is in %d tries\n", min, max, count-i);
+        if (last_guess != -1) {
+            if (last_relation == 0) printf("Last guess: %d (correct).\n", last_guess);
+            else if (last_relation == 1) printf("Last guess: %d (too high).\n", last_guess);
+            else if (last_relation == -1) printf("Last guess: %d (too low).\n", last_guess);
+            else printf("Last input: %d (invalid/out of range).\n", last_guess);
+        }
+        printf("What is the number: ", min, max, count-i);
         int guess = valueinput();
+        last_guess = guess;
 
         if (randomNum == guess){
+            last_relation = 0;
             printf("you guessed correctly! amazing boy you are perhaps\n");
             win = 1;
             break;
         }
 
         else if (guess > randomNum && guess <= max){
+            last_relation = 1;
             printf("oof wrong guess! you shot too high\n");
         }
 
         else if (guess < randomNum && guess >= min){
+            last_relation = -1;
             printf("oof wrong guess! you shot too low\n");
         }
 
         else{
+            last_relation = 2;
             printf("you didnt even try! disappointing boy you are truly\n");
         }
         
@@ -137,6 +169,8 @@ void trial(){
     }
         if (win == 0){
         printf("you didn't discover the number! you poor boy you...\n");
+    } else {
+        /* win == 1 */
     }
 }
 
